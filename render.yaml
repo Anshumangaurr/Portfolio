@@ -1,0 +1,31 @@
+services:
+  # Backend service
+  - type: web
+    name: ai-portfolio-backend
+    env: python
+    region: singapore
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: OPENROUTER_API_KEY
+        sync: false # You will need to set this in the Render dashboard
+      - key: PYTHON_VERSION
+        value: 3.11.0
+
+  # Frontend service
+  - type: web
+    name: anshuman-portfolio-frontend
+    env: static
+    region: singapore
+    plan: free
+    rootDir: frontend
+    buildCommand: npm run build
+    publishDir: dist
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: ai-portfolio-backend
+          property: host
