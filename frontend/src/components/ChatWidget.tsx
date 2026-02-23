@@ -42,7 +42,11 @@ const ChatWidget: React.FC = () => {
         setMessages(prev => [...prev, botMessagePlaceholder]);
 
         try {
-            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+            const rawApiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+            const API_URL = rawApiUrl.endsWith('/') ? rawApiUrl.slice(0, -1) : rawApiUrl;
+
+            console.log('Connecting to Chat API at:', `${API_URL}/chat`);
+
             const response = await fetch(`${API_URL}/chat`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },

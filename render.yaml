@@ -23,7 +23,4 @@ services:
     staticPublishPath: dist
     envVars:
       - key: VITE_API_URL
-        fromService:
-          type: web
-          name: ai-portfolio-backend
-          property: host
+        sync: false # Set this to your backend service's public URL (e.g., https://ai-portfolio-backend.onrender.com)
