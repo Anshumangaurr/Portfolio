@@ -1,0 +1,75 @@
+{
+    "name": "Anshuman Gaur",
+    "title": "Full Stack Developer & AI Enthusiast",
+    "contact": {
+        "email": "anshuman@example.com",
+        "location": "Vellore / Ghaziabad, India",
+        "github": "https://github.com/Anshumangaurr"
+    },
+    "summary": "Third-year Computer Science undergraduate at VIT Vellore with strong expertise in full-stack development, including React.js, Node.js, Python, Java, and SQL. Proven experience in developing end-to-end web applications, REST APIs, and relational databases, along with active participation in IEEE and CodeChef.",
+    "experience": [
+        {
+            "company": "Excel Life Technologies",
+            "role": "Web Development Intern",
+            "duration": "May 2025 – July 2025",
+            "location": "Noida, UP",
+            "description": "Provided a real-time computerized solution to a company for Inventory Management. Implemented and evaluated User interface and database Using React js and SQL. Received certification and appreciation for automation of inventory management."
+        },
+        {
+            "company": "IEEE, VIT Vellore",
+            "role": "Machine Learning Engineer (SmartTrail Project)",
+            "duration": "Jan 2025 – May 2025",
+            "description": "Implemented person detection and tracking using computer vision techniques (Achieved 80-85 percent accuracy). Designed for deployment in airports, railway stations, and malls. Technologies Used: Python, OpenCV, Machine Learning and embedded systems for autonomous navigation."
+        }
+    ],
+    "education": [
+        {
+            "institution": "VIT Vellore",
+            "degree": "Bachelor’s Degree, Computer Science",
+            "year": "July 2023 - Present",
+            "score": "Current CGPA 8.1"
+        },
+        {
+            "institution": "Presidium Indirapuram, Ghaziabad",
+            "degree": "Higher Secondary School Certificate (Class XII CBSE)",
+            "year": "April 2021 - April 2023",
+            "score": "82 Percent"
+        },
+        {
+            "institution": "Presidium Indirapuram, Ghaziabad",
+            "degree": "10th Central Board of Secondary Education",
+            "year": "April 2020 - April 2021",
+            "score": "90 Percent"
+        }
+    ],
+    "projects": [
+        {
+            "title": "Advanced Circuit and Technologies UI (Database Creation and WebDev)",
+            "tech": "Python, SQL, Javascript",
+            "duration": "May 2025 – July 2025",
+            "description": "Developed a computerized inventory management system using Flask and MySQL with full CRUD operations. Designed a structured SQL database to manage products, employees, orders, and inventory data. Built a scalable backend with efficient data handling and REST-style routes."
+        },
+        {
+            "title": "EmotiCare AI – Emotion-Aware Conversational Assistant",
+            "tech": "Python, NLP",
+            "duration": "Sep 2025 – Present",
+            "description": "Built an emotion-aware AI chatbot using NLP and sentiment analysis to detect and respond to user emotions. Enhanced customer interaction by generating empathetic, context-aware responses (Achieved 78 percent accuracy)."
+        }
+    ],
+    "skills": [
+        "Python",
+        "Java",
+        "JavaScript",
+        "SQL",
+        "React.js",
+        "Node.js",
+        "OpenCV",
+        "NumPy",
+        "MySQL",
+        "VSCode"
+    ],
+    "certifications": [
+        "Meta Front End development course - Coursera",
+        "Programming Foundations with JavaScript, HTML and CSS by Duke University - Coursera"
+    ]
+}
