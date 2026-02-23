@@ -15,11 +15,10 @@ services:
         value: 3.11.0
 
   # Frontend service
-  - type: static
+  - type: web
     name: anshuman-portfolio-frontend
     env: static
     region: singapore
-    plan: free
     rootDir: frontend
     buildCommand: npm run build
     staticPublishPath: dist
