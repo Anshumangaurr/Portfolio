@@ -1,11 +1,12 @@
 import os
 import json
-from typing import List, Dict
-from fastapi import FastAPI, HTTPException
+import asyncio
+from typing import List
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
-from openai import OpenAI
+import google.generativeai as genai
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -15,7 +16,7 @@ app = FastAPI()
 # Enable CORS for frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # In production, replace with your frontend URL
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -27,19 +28,6 @@ try:
         RESUME_DATA = json.load(f)
 except FileNotFoundError:
     RESUME_DATA = {}
-
-# Initialize OpenRouter client
-client = OpenAI(
-  base_url="https://openrouter.ai/api/v1",
-  api_key=os.getenv("OPENROUTER_API_KEY"),
-)
-
-class ChatMessage(BaseModel):
-    role: str
-    content: str
-
-class ChatRequest(BaseModel):
-    messages: List[ChatMessage]
 
 SYSTEM_PROMPT = f"""
 You are the elite, highly advanced AI assistant representing Anshuman Gaur's professional portfolio. 
@@ -61,40 +49,60 @@ GOAL:
 Leave every visitor impressed with Anshuman's technical depth and professional caliber. You are NOT just a chatbot; you are a reflection of his excellence.
 """
 
+class ChatMessage(BaseModel):
+    role: str
+    content: str
+
+class ChatRequest(BaseModel):
+    messages: List[ChatMessage]
+
 @app.get("/")
 async def root():
     return {"message": "AI Portfolio Backend is running"}
 
 @app.post("/chat")
 async def chat(request: ChatRequest):
-    api_key = os.getenv("OPENROUTER_API_KEY")
-    
+    api_key = os.getenv("GOOGLE_API_KEY")
+
     if not api_key or api_key == "your_key_here":
         async def key_reminder():
-            yield "⚠️ **API Key Missing**: Please add your OpenRouter API key to the `backend/.env` file to enable the AI chat functionality. \n\nGet your key at [openrouter.ai](https://openrouter.ai/)."
+            yield "⚠️ **API Key Missing**: Please add your Google AI Studio API key to the `backend/.env` file. Get your free key at [aistudio.google.com](https://aistudio.google.com/)."
         return StreamingResponse(key_reminder(), media_type="text/plain")
 
-    async def event_generator():
-        try:
-            stream = client.chat.completions.create(
-                extra_headers={
-                    "HTTP-Referer": "http://localhost:5174",
-                    "X-Title": "Anshuman Portfolio",
-                },
-                model="openrouter/free",
-                messages=[
-                    {"role": "system", "content": SYSTEM_PROMPT},
-                    *[{"role": m.role, "content": m.content} for m in request.messages]
-                ],
-                stream=True,
-            )
-            for chunk in stream:
-                if chunk.choices and chunk.choices[0].delta.content:
-                    yield chunk.choices[0].delta.content
-        except Exception as e:
-            yield f"❌ **Error**: {str(e)}"
+    try:
+        genai.configure(api_key=api_key)
+        model = genai.GenerativeModel(
+            model_name="models/gemini-flash-latest",
+            system_instruction=SYSTEM_PROMPT,
+        )
 
-    return StreamingResponse(event_generator(), media_type="text/plain")
+        # Build conversation history
+        all_messages = list(request.messages)
+        history = []
+        for msg in all_messages[:-1]:
+            history.append({
+                "role": "user" if msg.role == "user" else "model",
+                "parts": [msg.content]
+            })
+
+        last_message = all_messages[-1].content
+
+        async def event_generator():
+            try:
+                chat_session = model.start_chat(history=history)
+                response = chat_session.send_message(last_message, stream=True)
+                for chunk in response:
+                    if chunk.text:
+                        yield chunk.text
+            except Exception as e:
+                yield f"❌ **Error**: {str(e)}"
+
+        return StreamingResponse(event_generator(), media_type="text/plain")
+
+    except Exception as e:
+        async def error_response():
+            yield f"❌ **Error**: {str(e)}"
+        return StreamingResponse(error_response(), media_type="text/plain")
 
 if __name__ == "__main__":
     import uvicorn

@@ -78,10 +78,14 @@ const ChatWidget: React.FC = () => {
                 });
             }
         } catch (error) {
-            console.error(error);
+            console.error('Chat error:', error);
+            const errMsg = error instanceof Error ? error.message : 'Unknown error';
+            const displayMsg = errMsg.includes('fetch') || errMsg.includes('network')
+                ? '❌ **Error**: Cannot connect to the backend. Is the server running?'
+                : `❌ **Error**: ${errMsg}`;
             setMessages(prev => {
                 const newMessages = [...prev];
-                newMessages[newMessages.length - 1] = { role: 'assistant', content: 'Sorry, I\'m having trouble connecting right now.' };
+                newMessages[newMessages.length - 1] = { role: 'assistant', content: displayMsg };
                 return newMessages;
             });
         } finally {

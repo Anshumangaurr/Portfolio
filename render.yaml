@@ -9,8 +9,8 @@ services:
     buildCommand: pip install -r requirements.txt
     startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
     envVars:
-      - key: OPENROUTER_API_KEY
-        sync: false # You will need to set this in the Render dashboard
+      - key: GOOGLE_API_KEY
+        sync: false # Set this to your Google AI Studio key from aistudio.google.com/app/apikey
       - key: PYTHON_VERSION
         value: 3.11.0
 
