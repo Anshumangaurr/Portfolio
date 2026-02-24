@@ -77,15 +77,20 @@ async def chat(request: ChatRequest):
         )
 
         # Build conversation history
+        # Build conversation history
         all_messages = list(request.messages)
+        if not all_messages:
+            return StreamingResponse(iter(["No messages provided"]), media_type="text/plain")
+
+        last_message_obj = all_messages.pop()
+        last_message = last_message_obj.content
+        
         history = []
-        for msg in all_messages[:-1]:
+        for msg in all_messages:
             history.append({
                 "role": "user" if msg.role == "user" else "model",
                 "parts": [msg.content]
             })
-
-        last_message = all_messages[-1].content
 
         async def event_generator():
             try:
